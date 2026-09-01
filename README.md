@@ -3,6 +3,7 @@ This repository contains a workflow that resolves the gene copy-number, order, a
 
 ## Usage
 This workflow is written for nextflow version 26
+
 **Before running, make sure that you have nextflow version 26 installed to your environment.** 
 
 ```
