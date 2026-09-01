@@ -1,37 +1,22 @@
 # Introduction
 This repository contains a workflow that resolves the gene copy-number, order, and phasing for the opsin genes located at chromosome Xq28. The assembly and annotation steps of this workflow were used in (Anderson et al., 2026) Long-read sequencing with targeted assembly of the opsin locus accurately evaluates genes in expressed positions. https://www.medrxiv.org/content/10.64898/2026.03.17.26348636v1
 
-## Usage
-This workflow is written for nextflow version 26
 
-**Before running, make sure that you have nextflow version 26 installed to your environment.** 
+## Installation and setup
+1. Clone this repository to your machine
+2. Install hifiasm (requiring g++ and zlib)
+    - git clone https://github.com/chhylp123/hifiasm into the ``./resources`` directory.
+    - cd hifiasm && make
+3. Create conda environments for each yaml file in ``./resources/environments``
+    - ``conda env create -f environment.yml``
+    - Each environment will have a name that is designated in the .yml file.
+4. Update environment paths in ``./nextflow.config``
+    - See **Using conda environments below**
+5. Create and activate an environment with nextflow version 26
+    - e.g., ``conda create -n nextflow_26 -c conda-forge -c bioconda nextflow=26.04.4``
+6. Update ``./resources/sample_file.tsv`` with your sample IDs and the Sex
+    - See **Input and output file formats**
 
-```
-nextflow run main.nf \
---bam_dir \  path to directory of bam files
---input_suffix \  input bam file suffix
---region_name \  name or identifier for samples in batch
---region \  coordinates in chr-start-end format 
---metadata_table \  list of samples
---output_dir \  publish location for outputs
---final_output_name \  final summary file name
---nested_bams \  flag that looks for bams in nested sub-directories ${bam_dir}/*/${sample_id}*${input_suffix} (default is FALSE; to run just add the flag to the nextflow command)
--resume
-```
-
-### Reference genome specific coordinates:
-If your starting input bam file has been aligned to the GRChg38 reference genome, then you will use chrX:153121316-155216212 as your coordinates.
-
-If your starting input bam file has been aligned to the T2T-CHM13 reference genome, then you will use chrX:151389254-153479422 as your coordinates.
-
-### Note about input bam directory
-- If the bams are nested, use the --nested_bams flag
-## Dependencies and environments
-All dependencies should be available through conda, docker or github
-- samtools - version 1.22 or newer
-- hifiasm
-- minimap2 - version 2.28 or newer
-- exonerate
 
 ### Using conda environments
 This workflow is designed to use conda environments for the different steps or modules (found in ``./modules/``).
@@ -56,7 +41,7 @@ process {
     }
 
     withLabel: 'align_to_assembly' {
-        conda = '/usr/share/millerlab/minimap-2.28'
+        conda = '/home/usr/.conda/envs/minimap-2.28' ## <-- This is what gets changed
         cpus = 10
     }
 
@@ -76,15 +61,17 @@ process {
     }
 }
 ```
-YAML files for samtools, exonerate, and minimap2 are located in ``./resources/``
-The paths to each conda environment must be changed to your machine-specific paths for the workflow to run.
 
 
 ## Input and output file formats
-The starting file for this workflow must be an **aligned bam file**. The bam index is also needed. Note that the reference genome will effect the genomic coordinates that you use. 
 
+### Aligned bam file
+The starting file for this workflow must be an **aligned bam file** along with its bam index. Note that the reference genome will effect the genomic coordinates that you use. 
+
+### Metadata file
 The other file you will need is a tab-separated metadata file that has the sample identifier (Sample ID) and the Sex (XX or XY)
 
+### Output files
 
 A summary annotation file that each sample and haplotype is appended to will be generated and output to the ``output_dir`` location. This file has the following columns: 
 
@@ -112,3 +99,26 @@ A summary annotation file that each sample and haplotype is appended to will be 
 |primary_lcr_mapq0|Number of reads that map to the primary LCR annotation site with a mapq score of 0|
 
 
+## Usage
+
+```
+nextflow run main.nf \
+--bam_dir \  path to directory of bam files
+--input_suffix \  input bam file suffix
+--region_name \  name or identifier for samples in batch
+--region \  coordinates in chr-start-end format (Will change depending on reference genome)
+--metadata_table \  list of samples
+--output_dir \  publish location for outputs
+--final_output_name \  final summary file name
+--nested_bams \  flag that looks for bams in nested sub-directories ${bam_dir}/*/${sample_id}*${input_suffix} (default is FALSE; to run just add the flag to the nextflow command)
+-resume
+```
+
+
+### Reference genome specific coordinates:
+If your starting input bam file has been aligned to the GRChg38 reference genome, then you will use chrX:153121316-155216212 as your coordinates.
+
+If your starting input bam file has been aligned to the T2T-CHM13 reference genome, then you will use chrX:151389254-153479422 as your coordinates.
+
+### Note about input bam directory
+- If the bams are nested, use the --nested_bams flag

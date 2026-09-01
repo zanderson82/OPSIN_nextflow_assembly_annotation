@@ -13,7 +13,7 @@ process run_hifiasm_XY {
 
     script:
     """
-    hifiasm -o "${sample_id}.${sex}.${params.region_name}.asm" --ont -t${task.cpus} ${params.hifiasm_opts_XY} --hg-size "${hg_size}" "${fastq}"
+    ${projectDir}/resources/hifiasm/hifiasm -o "${sample_id}.${sex}.${params.region_name}.asm" --ont -t${task.cpus} ${params.hifiasm_opts_XY} --hg-size "${hg_size}" "${fastq}"
 
     awk '/^S/{print ">"\$2"\\n"\$3}' "${sample_id}.${sex}.${params.region_name}.asm.bp.p_ctg.gfa" > "${sample_id}.${sex}.${params.region_name}.asm.p_ctg.fa"
     samtools faidx "${sample_id}.${sex}.${params.region_name}.asm.p_ctg.fa"
