@@ -85,8 +85,8 @@ The starting file for this workflow must be an **aligned bam file**. The bam ind
 
 The other file you will need is a tab-separated metadata file that has the sample identifier (Sample ID) and the Sex (XX or XY)
 
-There are two summary output files:
-1. A summary annotation file that each sample and haplotype is appended to. This file has the following columns: 
+
+A summary annotation file that each sample and haplotype is appended to will be generated and output to the ``output_dir`` location. This file has the following columns: 
 
 |Column name|Contents|
 |-----------|--------|
