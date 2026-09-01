@@ -3,6 +3,8 @@ This repository contains a workflow that resolves the gene copy-number, order, a
 
 ## Usage
 This workflow is written for nextflow version 26
+**Before running, make sure that you have nextflow version 26 installed to your environment.** 
+
 ```
 nextflow run main.nf \
 --bam_dir \  path to directory of bam files
@@ -30,7 +32,7 @@ All dependencies should be available through conda, docker or github
 - minimap2 - version 2.28 or newer
 - exonerate
 
-### YAML files for samtools, exonerate, and minimap2 are located in ``./resources/``
+### Using conda environments
 This workflow is designed to use conda environments for the different steps or modules (found in ``./modules/``).
 The conda environment that is to be used for each step is denoted in ``./nextflow.config``. Once you create your own environments with the YAML files, you will change the paths to each respective environment.
 
@@ -73,7 +75,7 @@ process {
     }
 }
 ```
-
+YAML files for samtools, exonerate, and minimap2 are located in ``./resources/``
 The paths to each conda environment must be changed to your machine-specific paths for the workflow to run.
 
 
