@@ -1,0 +1,11 @@
+assembly_and_annotation_outputs/*
+work/
+.nextflow
+.nextflow.log*
+bin/dipcall.kit
+resources/hifiasm/
+intermediate_outputs/
+*outputs/
+resources/sample_file.tsv
+NSC*
+chm13*
